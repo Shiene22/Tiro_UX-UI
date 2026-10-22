@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Records Management</title>
+<style>
+:root{--navy:#064e3b;--navy2:#065f46;--blue:#047857;--bg:#f0faf5;--card:#fff;--text:#0b2a20;--mute:#4b6b5e;--line:#d5eadf;--green:#d1fae5;--greenT:#065f46;--red:#fde4e4;--redT:#d62d3a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07231a;--card:#0d3325;--text:#e6fff4;--mute:#8fc9b0;--line:#1b4d3a;--green:#12392b;--greenT:#6fe0a6;--red:#431b24;--redT:#ff8a93}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Inter","Segoe UI",system-ui,Arial,sans-serif;font-size:14px}
+.app{display:flex;min-height:100vh}
+aside{width:225px;background:var(--navy);color:#fff;display:flex;flex-direction:column;padding:16px 10px;flex-shrink:0}
+.brand{display:flex;gap:12px;align-items:center;font-weight:700;font-size:16px;padding:4px 10px 22px;line-height:1.2}
+.nav{display:flex;align-items:center;gap:14px;padding:11px 14px;border-radius:8px;cursor:pointer;margin-bottom:6px;border:0;background:none;color:#fff;width:100%;font:inherit;text-align:left}
+.nav.on{background:var(--blue)}
+.nav:hover:not(.on){background:var(--navy2)}
+.sp{flex:1}
+main{flex:1;min-width:0}
+.top{height:44px;display:flex;justify-content:flex-end;align-items:center;padding:0 24px;gap:10px;background:var(--card);border-bottom:1px solid var(--line)}
+.av{width:28px;height:28px;border-radius:50%;background:#c9eedd;display:grid;place-items:center;color:var(--navy)}
+.wrap{padding:22px 20px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:24px}
+.sub{color:var(--mute);margin:4px 0 18px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 16px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+.btn:focus-visible,.nav:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+.dng{background:#ee3b3b;color:#fff;border-color:#ee3b3b}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.bar{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.inp,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);font:inherit}
+.search{flex:1;min-width:200px;position:relative}
+.search svg{position:absolute;left:12px;top:11px}
+.search input{padding-left:38px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:720px}
+th{background:var(--bg);text-align:left;padding:12px;font-weight:700}
+td{padding:12px;border-top:1px solid var(--line)}
+.pill{padding:3px 10px;border-radius:6px;font-weight:600;font-size:13px}
+.Active{background:var(--green);color:var(--greenT)}.Inactive{background:var(--red);color:var(--redT)}
+.ic{width:32px;height:32px;border-radius:6px;border:0;cursor:pointer;display:inline-grid;place-items:center;margin-right:8px}
+.ed{background:var(--blue);color:#fff}.dl{background:var(--red);color:var(--redT)}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:var(--mute);flex-wrap:wrap;gap:8px}
+.pg{display:flex;gap:8px}.pg .btn{padding:6px 12px}
+.ov{position:fixed;inset:0;background:rgba(10,16,40,.5);display:grid;place-items:center;padding:16px;z-index:20}
+.modal{background:var(--card);border-radius:12px;padding:20px;width:100%;max-width:480px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.modal h3{margin:0 0 14px;font-size:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:12px;color:var(--mute);margin-bottom:4px}
+.err{color:var(--redT);font-size:12px;margin-top:3px}
+.acts{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.del{text-align:center;max-width:380px}
+.delic{width:52px;height:52px;border-radius:50%;background:var(--red);color:var(--redT);display:grid;place-items:center;margin:0 auto 10px}
+.info{background:var(--red);border-radius:6px;padding:12px;margin:14px 0;text-align:left;line-height:1.6}
+.del .acts{justify-content:center}.del .btn{flex:1}
+.set{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
+@media(max-width:900px){.set{grid-template-columns:1fr}aside{width:70px}.brand span,.nav span{display:none}.brand{justify-content:center;padding:4px 0 18px}.nav{justify-content:center}}
+.row{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px;margin-bottom:14px}
+.row b{display:flex;gap:12px;align-items:center;font-weight:600}
+.pw{position:relative}.pw button{position:absolute;right:10px;top:9px;border:0;background:none;color:var(--mute);cursor:pointer}
+.st{display:flex;gap:12px;align-items:center;padding:14px;border-radius:8px;background:var(--green);color:var(--greenT);margin-bottom:14px}
+.st.bad{background:var(--red);color:var(--redT)}
+.st b{display:block;font-size:16px}.st small{color:var(--text)}
+.qi div{display:grid;grid-template-columns:1fr 1fr;padding:7px 0}.qi div span:first-child{color:var(--text)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:8px;z-index:30}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState,useEffect,useMemo}=React;
+const html=htm.bind(React.createElement);
+const P=(d,s=18)=>html`<svg width=${s} height=${s} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" dangerouslySetInnerHTML=${{__html:d}}/>`;
+const I={
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+ out:'<path d="M9 21H5V3h4"/><path d="M16 17l5-5-5-5M21 12H9"/>',
+ cap:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ srch:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>',
+ pen:'<path d="M12 20h9"/><path d="M16.5 3.5l4 4L7 21H3v-4z"/>',
+ trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 11v6M14 11v6"/>',
+ db:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+ srv:'<rect x="3" y="3" width="18" height="7" rx="1"/><rect x="3" y="14" width="18" height="7" rx="1"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',
+ link:'<path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/>',
+ save:'<path d="M5 3h12l4 4v14H3V3z"/><path d="M7 3v6h8V3M7 21v-7h10v7"/>',
+ eye:'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
+ chk:'<path d="M20 6L9 17l-5-5"/>',
+ l:'<path d="M15 6l-6 6 6 6"/>',r:'<path d="M9 6l6 6-6 6"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ port:'<circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7v4M12 11l-6 5M12 11l6 5"/>'
+};
+const PROGRAMS=['BSIT','BSCS','BSA'],YEARS=['1st Year','2nd Year','3rd Year','4th Year'];
+const SEED=[
+ {id:'2024-001',name:'Maria Santos',program:'BSIT',year:'2nd Year',email:'maria.santos@school.edu',status:'Active'},
+ {id:'2024-002',name:'Juan Dela Cruz',program:'BSCS',year:'1st Year',email:'juan.delacruz@school.edu',status:'Active'},
+ {id:'2024-003',name:'Ana Reyes',program:'BSA',year:'3rd Year',email:'ana.reyes@school.edu',status:'Active'},
+ {id:'2024-004',name:'Carlos Garcia',program:'BSIT',year:'2nd Year',email:'carlos.garcia@school.edu',status:'Inactive'},
+ {id:'2024-005',name:'Sofia Lim',program:'BSCS',year:'1st Year',email:'sofia.lim@school.edu',status:'Active'}];
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const PER=5;
+
+function Sidebar({page,go}){
+ return html`<aside>
+  <div class="brand">${P(I.cap,36)}<span>Student Records Management</span></div>
+  <button class=${'nav'+(page==='dash'?' on':'')} onClick=${()=>go('dash')}>${P(I.home,20)}<span>Dashboard</span></button>
+  <button class=${'nav'+(page==='set'?' on':'')} onClick=${()=>go('set')}>${P(I.gear,20)}<span>Settings</span></button>
+  <div class="sp"></div>
+  <button class="nav" onClick=${()=>alert('Logged out (demo)')}>${P(I.out,20)}<span>Logout</span></button>
+ </aside>`;
+}
+
+function StudentForm({initial,existing,onSave,onClose}){
+ const editing=!!initial;
+ const [f,setF]=useState(initial||{id:'',name:'',program:'',year:'',email:'',status:'Active'});
+ const [e,setE]=useState({});
+ const set=k=>ev=>setF({...f,[k]:ev.target.value});
+ const submit=()=>{
+  const er={};
+  if(!/^\d{4}-\d{3}$/.test(f.id))er.id='Use format 2024-006';
+  else if(!editing&&existing.some(s=>s.id===f.id))er.id='ID already exists';
+  if(!f.name.trim())er.name='Name is required';
+  if(!f.program)er.program='Select a program';
+  if(!f.year)er.year='Select a year level';
+  if(!/^\S+@\S+\.\S+$/.test(f.email))er.email='Enter a valid email';
+  setE(er);
+  if(!Object.keys(er).length)onSave({...f,name:f.name.trim()});
+ };
+ const fld=(k,lab,el)=>html`<div><label>${lab}</label>${el}${e[k]&&html`<div class="err">${e[k]}</div>`}</div>`;
+ return html`<div class="ov" onClick=${onClose}><div class="modal" onClick=${x=>x.stopPropagation()}>
+  <div style=${{display:'flex',justifyContent:'space-between'}}><h3>${editing?'Edit Student':'Add New Student'}</h3><button class="ic" style=${{background:'none',color:'var(--mute)'}} onClick=${onClose} aria-label="Close">${P(I.x,16)}</button></div>
+  <div class="g2">
+   ${fld('id','Student ID',html`<input class="inp" placeholder="e.g. 2024-006" value=${f.id} disabled=${editing} onInput=${set('id')}/>`)}
+   ${fld('name','Name',html`<input class="inp" placeholder="e.g. Juan Santos" value=${f.name} onInput=${set('name')}/>`)}
+   ${fld('program','Program',html`<select value=${f.program} onChange=${set('program')}><option value="">Select program</option>${PROGRAMS.map(p=>html`<option>${p}</option>`)}</select>`)}
+   ${fld('year','Year Level',html`<select value=${f.year} onChange=${set('year')}><option value="">Select year level</option>${YEARS.map(p=>html`<option>${p}</option>`)}</select>`)}
+   ${fld('email','Email',html`<input class="inp" placeholder="e.g. example@school.edu" value=${f.email} onInput=${set('email')}/>`)}
+   ${fld('status','Status',html`<select value=${f.status} onChange=${set('status')}><option>Active</option><option>Inactive</option></select>`)}
+  </div>
+  <div class="acts"><button class="btn" onClick=${onClose}>Cancel</button><button class="btn pri" onClick=${submit}>Save</button></div>
+ </div></div>`;
+}
+
+function DeleteModal({s,onConfirm,onClose}){
+ return html`<div class="ov" onClick=${onClose}><div class="modal del" onClick=${x=>x.stopPropagation()}>
+  <div class="delic">${P(I.trash,24)}</div>
+  <h3 style=${{marginBottom:6}}>Delete Student Record</h3>
+  <div style=${{color:'var(--mute)',fontSize:13}}>Are you sure you want to delete this record?<br/>This action cannot be undone.</div>
+  <div class="info">Student: ${s.name} (${s.id})<br/>Program: ${s.program}</div>
+  <div class="acts"><button class="btn" onClick=${onClose}>Cancel</button><button class="btn dng" onClick=${onConfirm}>Delete</button></div>
+ </div></div>`;
+}
+
+function Dashboard({students,setStudents,toast}){
+ const [q,setQ]=useState(''),[prog,setProg]=useState(''),[pg,setPg]=useState(1);
+ const [form,setForm]=useState(null),[del,setDel]=useState(null);
+ const list=useMemo(()=>students.filter(s=>(!prog||s.program===prog)&&[s.name,s.id,s.program].join(' ').toLowerCase().includes(q.toLowerCase())),[students,q,prog]);
+ const pages=Math.max(1,Math.ceil(list.length/PER));
+ const cur=Math.min(pg,pages);
+ const rows=list.slice((cur-1)*PER,cur*PER);
+ const from=list.length?(cur-1)*PER+1:0,to=Math.min(cur*PER,list.length);
+ const onSave=s=>{
+  if(form==='new'){setStudents([...students,s]);toast('Student added')}
+  else{setStudents(students.map(x=>x.id===s.id?s:x));toast('Student updated')}
+  setForm(null);
+ };
+ return html`<div class="wrap">
+  <div class="head"><div><h1>Dashboard</h1><div class="sub">Manage student records in your database</div></div>
+   <button class="btn pri" onClick=${()=>setForm('new')}>${P(I.plus)} Add New Student</button></div>
+  <div class="card">
+   <div class="bar">
+    <div class="search">${P(I.srch)}<input class="inp" placeholder="Search by name, student ID, or program..." value=${q} onInput=${e=>{setQ(e.target.value);setPg(1)}}/></div>
+    <div style=${{width:250,maxWidth:'100%'}}><select value=${prog} onChange=${e=>{setProg(e.target.value);setPg(1)}}><option value="">All Programs</option>${PROGRAMS.map(p=>html`<option>${p}</option>`)}</select></div>
+    <button class="btn" style=${{minWidth:120}} onClick=${()=>{setQ('');setProg('');setPg(1)}}>Reset</button>
+   </div>
+   <div class="tw"><table>
+    <thead><tr><th>ID</th><th>Name</th><th>Program</th><th>Year Level</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+     ${rows.map(s=>html`<tr key=${s.id}><td>${s.id}</td><td>${s.name}</td><td>${s.program}</td><td>${s.year}</td><td>${s.email}</td>
+      <td><span class=${'pill '+s.status}>${s.status}</span></td>
+      <td style=${{whiteSpace:'nowrap'}}><button class="ic ed" aria-label="Edit" onClick=${()=>setForm(s)}>${P(I.pen,16)}</button><button class="ic dl" aria-label="Delete" onClick=${()=>setDel(s)}>${P(I.trash,16)}</button></td></tr>`)}
+     ${!rows.length&&html`<tr><td colspan="7" style=${{textAlign:'center',color:'var(--mute)',padding:28}}>No students match your search. Try Reset or add a new student.</td></tr>`}
+    </tbody></table></div>
+   <div class="foot"><span>Showing ${from} to ${to} of ${list.length} records</span>
+    <div class="pg"><button class="btn" disabled=${cur===1} onClick=${()=>setPg(cur-1)} aria-label="Previous">${P(I.l,16)}</button>
+     ${Array.from({length:pages},(_,i)=>html`<button class=${'btn'+(cur===i+1?' pri':'')} onClick=${()=>setPg(i+1)}>${i+1}</button>`)}
+     <button class="btn" disabled=${cur===pages} onClick=${()=>setPg(cur+1)} aria-label="Next">${P(I.r,16)}</button></div></div>
+  </div>
+  ${form&&html`<${StudentForm} initial=${form==='new'?null:form} existing=${students} onSave=${onSave} onClose=${()=>setForm(null)}/>`}
+  ${del&&html`<${DeleteModal} s=${del} onClose=${()=>setDel(null)} onConfirm=${()=>{setStudents(students.filter(x=>x.id!==del.id));setDel(null);toast('Student deleted')}}/>`}
+ </div>`;
+}
+
+function Settings({go,toast}){
+ const [c,setC]=useState(()=>load('db',{host:'localhost',port:'3306',name:'student_db',user:'root',pass:'password'}));
+ const [show,setShow]=useState(false);
+ const [conn,setConn]=useState({ok:true,msg:'Successfully connected to the database.'});
+ const [busy,setBusy]=useState(false);
+ const set=k=>e=>setC({...c,[k]:e.target.value});
+ const test=()=>{
+  setBusy(true);
+  setTimeout(()=>{
+   const ok=c.host&&/^\d{2,5}$/.test(c.port)&&c.name&&c.user&&c.pass;
+   setConn(ok?{ok:true,msg:'Successfully connected to the database.'}:{ok:false,msg:'Check that every field is filled in and the port is a number.'});
+   setBusy(false);
+  },700);
+ };
+ const rows=[['host','Database Host','srv','text'],['port','Port','port','text'],['name','Database Name','db','text'],['user','Username','user','text'],['pass','Password','lock',show?'text':'password']];
+ const qi=[['Database Host',c.host,'srv'],['Port',c.port,'port'],['Database Name',c.name,'db'],['Username',c.user,'user']];
+ return html`<div class="wrap">
+  <h1>Database Settings</h1><div class="sub">Enter your database credentials to connect to your database.</div>
+  <div class="set">
+   <div class="card" style=${{padding:20}}>
+    <h3 style=${{margin:'0 0 18px'}}>Database Credentials</h3>
+    ${rows.map(([k,l,ic,t])=>html`<div class="row"><b>${P(I[ic],20)} ${l}</b>
+     <div class=${k==='pass'?'pw':''}><input class="inp" type=${t} value=${c[k]} onInput=${set(k)} aria-label=${l}/>
+     ${k==='pass'&&html`<button onClick=${()=>setShow(!show)} aria-label="Toggle password">${P(I.eye,18)}</button>`}</div></div>`)}
+    <div class="g2" style=${{marginLeft:160}}>
+     <button class="btn pri" disabled=${busy} onClick=${test}>${P(I.link)} ${busy?'Testing...':'Test Connection'}</button>
+     <button class="btn pri" onClick=${()=>{save('db',c);toast('Settings saved')}}>${P(I.save)} Save Settings</button></div>
+   </div>
+   <div>
+    <div class="card"><h4 style=${{margin:'0 0 12px'}}>Connection Status</h4>
+     <div class=${'st'+(conn.ok?'':' bad')}>${P(conn.ok?I.chk:I.x,26)}<div><b>${conn.ok?'Connected':'Connection failed'}</b><small>${conn.msg}</small></div></div>
+     <div class="card qi"><h4 style=${{margin:'0 0 6px'}}>Quick Info</h4>
+      ${qi.map(([l,v,ic])=>html`<div><span style=${{display:'flex',gap:10,alignItems:'center'}}>${P(I[ic],16)} ${l}</span><span>${v}</span></div>`)}</div>
+     <button class="btn" style=${{width:'100%',marginTop:14,justifyContent:'flex-start',background:'var(--bg)'}} onClick=${()=>go('dash')}>${P(I.l,16)} Back to Dashboard</button>
+    </div>
+   </div>
+  </div>
+ </div>`;
+}
+
+function App(){
+ const [page,setPage]=useState(()=>location.hash==='#settings'?'set':'dash');
+ const [students,setS]=useState(()=>load('students',SEED));
+ const [t,setT]=useState('');
+ const setStudents=v=>{setS(v);save('students',v)};
+ const toast=m=>{setT(m);setTimeout(()=>setT(''),2000)};
+ const go=p=>setPage(p);
+ return html`<div class="app"><${Sidebar} page=${page} go=${go}/>
+  <main><div class="top"><div class="av">${P(I.user,16)}</div><span>Admin User</span></div>
+   ${page==='dash'?html`<${Dashboard} students=${students} setStudents=${setStudents} toast=${toast}/>`:html`<${Settings} go=${go} toast=${toast}/>`}
+  </main>${t&&html`<div class="toast" role="status">${t}</div>`}</div>`;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>
+</body>
+</html>
